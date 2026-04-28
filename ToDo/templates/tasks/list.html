@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>Мои задачи</h3>
+
+    <a href="{% url 'create_task' %}" class="btn btn-main">
+        + Новая задача
+    </a>
+</div>
+
+<!-- ФИЛЬТРЫ + СОРТИРОВКА -->
+<div class="mb-4 d-flex gap-2 flex-wrap">
+
+    <!-- ФИЛЬТРЫ -->
+    <a href="?sort={{ request.GET.sort }}"
+       class="btn btn-soft {% if not request.GET.status %}active{% endif %}">
+        Все
+    </a>
+
+    <a href="?status=todo&sort={{ request.GET.sort }}"
+       class="btn btn-soft {% if request.GET.status == 'todo' %}active{% endif %}">
+        В процессе
+    </a>
+
+    <a href="?status=done&sort={{ request.GET.sort }}"
+       class="btn btn-soft {% if request.GET.status == 'done' %}active{% endif %}">
+        Выполненные
+    </a>
+
+    <span class="mx-2">|</span>
+
+    <!-- СОРТИРОВКА -->
+    <a href="?status={{ request.GET.status }}&sort=priority"
+       class="btn btn-soft {% if request.GET.sort == 'priority' %}active{% endif %}">
+        По важности
+    </a>
+
+    <a href="?status={{ request.GET.status }}&sort=deadline"
+       class="btn btn-soft {% if request.GET.sort == 'deadline' %}active{% endif %}">
+        По дедлайну
+    </a>
+
+</div>
+
+<!-- СПИСОК ЗАДАЧ -->
+<div class="row">
+
+{% for task in tasks %}
+    <div class="col-md-6 col-lg-4">
+
+        <div class="card p-3 mb-3">
+
+            <!-- ЗАГОЛОВОК -->
+            <div class="d-flex justify-content-between align-items-start">
+
+                <h5 class="mb-2">{{ task.title }}</h5>
+
+                <form method="post" action="{% url 'toggle_task' task.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-soft">
+                        ✓
+                    </button>
+                </form>
+
+            </div>
+
+            <!-- ОПИСАНИЕ -->
+            {% if task.description %}
+                <p class="text-muted small mb-2">
+                    {{ task.description }}
+                </p>
+            {% endif %}
+
+            <!-- ДЕДЛАЙН -->
+            {% if task.deadline %}
+                <p class="small mb-2">
+                    ⏰ До: {{ task.deadline|date:"d.m.Y H:i" }}
+                </p>
+            {% endif %}
+
+            <!-- СТАТУС И ПРИОРИТЕТ -->
+            <div class="d-flex justify-content-between align-items-center">
+
+                <!-- приоритет -->
+                <span class="badge 
+                    {% if task.priority == 'high' %}priority-high
+                    {% elif task.priority == 'medium' %}priority-medium
+                    {% else %}priority-low{% endif %}">
+                    {{ task.get_priority_display }}
+                </span>
+
+                <!-- статус -->
+                <span class="
+                    {% if task.status == 'done' %}status-done
+                    {% else %}status-todo{% endif %}">
+                    
+                    {% if task.status == 'done' %}
+                        выполнено
+                    {% else %}
+                        в процессе
+                    {% endif %}
+
+                </span>
+
+            </div>
+
+            <!-- КНОПКИ -->
+            <div class="mt-3 d-flex gap-2">
+
+                <a href="{% url 'update_task' task.id %}" class="btn btn-outline-dark w-100">
+                    Редактировать
+                </a>
+
+                <form method="post" action="{% url 'delete_task' task.id %}" class="w-100">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-danger w-100">
+                        Удалить
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% empty %}
+    <p>Пока нет задач</p>
+{% endfor %}
+
+</div>
+
+{% endblock %}

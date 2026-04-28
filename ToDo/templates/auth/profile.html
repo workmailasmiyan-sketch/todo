@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h3 class="mb-4">Профиль</h3>
+
+<div class="row">
+
+    <!-- СТАТИСТИКА -->
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Статистика</h5>
+            <p>Всего задач: {{ total_tasks }}</p>
+            <p>Выполнено: {{ done_tasks }}</p>
+            <p>Прогресс: {{ progress }}%</p>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+
+        <!-- ИЗМЕНЕНИЕ ДАННЫХ -->
+        <div class="card p-3 mb-3">
+            <h5>Изменить данные</h5>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label>Логин</label>
+                <input type="text" name="username"
+                       value="{{ user_form.data.username|default:user_form.instance.username }}">
+
+                {% if user_form.username.errors %}
+                    <div class="text-danger small">
+                        {{ user_form.username.errors }}
+                    </div>
+                {% endif %}
+
+                <label>Email</label>
+                <input type="email" name="email"
+                       value="{{ user_form.data.email|default:user_form.instance.email }}">
+
+                {% if user_form.email.errors %}
+                    <div class="text-danger small">
+                        {{ user_form.email.errors }}
+                    </div>
+                {% endif %}
+
+                <button name="update_user" class="btn btn-main mt-2">
+                    Сохранить
+                </button>
+            </form>
+        </div>
+
+        <!-- СМЕНА ПАРОЛЯ -->
+        <div class="card p-3">
+            <h5>Смена пароля</h5>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <!-- ОБЩИЕ ОШИБКИ -->
+                {% if password_form.non_field_errors %}
+                    <div class="text-danger mb-2">
+                        {{ password_form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <label>Новый пароль</label>
+                <input type="password" name="new_password1">
+
+                {% if password_form.new_password1.errors %}
+                    <div class="text-danger small">
+                        {{ password_form.new_password1.errors }}
+                    </div>
+                {% endif %}
+
+                <label class="mt-2">Повторите пароль</label>
+                <input type="password" name="new_password2">
+
+                {% if password_form.new_password2.errors %}
+                    <div class="text-danger small">
+                        {{ password_form.new_password2.errors }}
+                    </div>
+                {% endif %}
+
+                <button name="change_password" class="btn btn-outline-danger mt-2">
+                    Изменить пароль
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

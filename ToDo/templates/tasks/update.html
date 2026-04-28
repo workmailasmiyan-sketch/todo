@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        <div class="card p-4">
+            <h4>Редактировать задачу</h4>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label>Название</label>
+                <input type="text" name="title" value="{{ task.title }}">
+
+                <label>Описание</label>
+                <textarea name="description">{{ task.description }}</textarea>
+
+                <label>Приоритет</label>
+                <select name="priority">
+                    <option value="low" {% if task.priority == 'low' %}selected{% endif %}>Низкий</option>
+                    <option value="medium" {% if task.priority == 'medium' %}selected{% endif %}>Средний</option>
+                    <option value="high" {% if task.priority == 'high' %}selected{% endif %}>Высокий</option>
+                </select>
+
+                <label>Дедлайн</label>
+                <input type="datetime-local" name="deadline"
+                       value="{{ task.deadline|date:'Y-m-d\\TH:i' }}">
+
+                <label>Статус</label>
+                <select name="status">
+                    <option value="todo" {% if task.status == 'todo' %}selected{% endif %}>К выполнению</option>
+                    <option value="done" {% if task.status == 'done' %}selected{% endif %}>Выполнено</option>
+                </select>
+
+                <button class="btn btn-main w-100 mt-2">
+                    Сохранить
+                </button>
+            </task>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

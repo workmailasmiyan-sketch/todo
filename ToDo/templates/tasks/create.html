@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+
+        <div class="card p-4">
+            <h4>Создать задачу</h4>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <label>Название</label>
+                <input type="text" name="title" required>
+
+                <label>Описание</label>
+                <textarea name="description"></textarea>
+
+                <label>Приоритет</label>
+                <select name="priority">
+                    <option value="low">Низкий</option>
+                    <option value="medium">Средний</option>
+                    <option value="high">Высокий</option>
+                </select>
+
+                <label>Дедлайн</label>
+                <input type="datetime-local" name="deadline">
+
+                <label>Статус</label>
+                <select name="status">
+                    <option value="todo">К выполнению</option>
+                    <option value="done">Выполнено</option>
+                </select>
+
+                <button class="btn btn-main w-100 mt-2">
+                    Создать
+                </button>
+            </form>
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
