@@ -23,7 +23,11 @@ body {
     transition: 0.25s;
 }
 
-.card:hover {
+.card-shadow:hover {
+    box-shadow: 0 15px 30px rgba(0,0,0,0.06);
+}
+
+.card-lift:hover {
     transform: translateY(-4px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.06);
 }
